@@ -2,8 +2,20 @@
 set -e
 set -u
 
-SERVER="productiumdb";
-DB="productium";
+db="productium";
 
-echo "CREATE DATABASE $DB ENCODING 'UTF-8';" | docker exec -i $SERVER psql -U postgres
-echo "\l" | docker exec -i $SERVER psql -U postgres
+function create_database() {
+	local database=$1
+	local role=$POSTGRES_USER
+	echo "  Creating database '$database'"
+	psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
+	    CREATE DATABASE $database;
+	    GRANT ALL PRIVILEGES ON DATABASE $database TO $role;
+EOSQL
+}
+
+if psql -lqt | cut -d \| -f 1 | grep -qw $db; then
+  echo "'$db' database exists"
+else
+  create_database $db
+fi
