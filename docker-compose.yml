@@ -1,23 +1,23 @@
 version: '3.7'
 
 services:
-  productiumdb:
+  postgres:
       image: postgres:12.1-alpine
       restart: unless-stopped
-      container_name: productiumdb
+      container_name: postgres
       environment:
-        - POSTGRES_HOST=${POSTGRES_HOST}
-        - POSTGRES_USER=${POSTGRES_USER}
-        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-        - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
       ports:
-        - 5432:5432
+      - 5432:5432
       expose:
-        - 5432
+      - 5432
       volumes:
-        - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
       networks:
-        productiumnet: {}
+        postgres: {}
 
   productiumback:
     image: productiumback
@@ -34,12 +34,10 @@ services:
     env_file:
     - .env
     networks:
-    - productiumnet
-    depends_on:
-    - productiumdb
+      postgres: {}
 
 networks:
-  productiumnet:
+  postgres:
     driver: bridge
 
 volumes:
