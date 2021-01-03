@@ -1,3 +1,6 @@
+FROM library/postgres
+COPY init.sql /docker-entrypoint-initdb.d/
+
 FROM node:10 AS builder
 WORKDIR /app
 COPY ./package.json ./

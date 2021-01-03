@@ -16,25 +16,26 @@ services:
       - 5432
       volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./pg-init-scripts:/docker-entrypoint-initdb.d
       networks:
         postgres: {}
 
-  productiumback:
-    image: productiumback
-    restart: unless-stopped
-    container_name: productiumback
-    build: .
-    volumes:
-    - .:/app
-    - /app/node_modules
-    ports:
-    - ${SERVER_PORT}:${SERVER_PORT}
-    - 9223:9223
-    command: npm run start:prod
-    env_file:
-    - .env
-    networks:
-      postgres: {}
+#  productiumback:
+#    image: productiumback
+#    restart: unless-stopped
+#    container_name: productiumback
+#    build: .
+#    volumes:
+#    - .:/app
+#    - /app/node_modules
+#    ports:
+#    - ${SERVER_PORT}:${SERVER_PORT}
+#    - 9223:9223
+#    command: npm run start:prod
+#    env_file:
+#    - .env
+#    networks:
+#      postgres: {}
 
 networks:
   postgres:
