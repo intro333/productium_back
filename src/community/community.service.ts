@@ -33,6 +33,7 @@ export class CommunityService {
     return this.repoSubscribe.save(dto.toEntity())
       .then((e) => CommunitySubscribeDTO.fromEntity(e))
       .catch((error) => {
+        console.log('LOGGING. subscribe error: ', error);
         let errorMessage = 'failed_to_create_record';
         if (error && error.code === '23505') {
           errorMessage = 'unique_violation'; // https://www.postgresql.org/docs/9.2/errcodes-appendix.html
