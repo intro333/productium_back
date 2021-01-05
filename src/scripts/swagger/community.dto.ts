@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
-import { CommunityServiceInfo, CommunitySubscribe } from '../../model/community.entity';
+import { CommunityReadiness, CommunityServiceInfo, CommunitySubscribe } from '../../model/community.entity';
 
 export class CommunityServiceInfoDTO implements Readonly<CommunityServiceInfoDTO> {
   @ApiProperty({ required: true })
@@ -40,22 +40,10 @@ export class CommunityServiceInfoDTO implements Readonly<CommunityServiceInfoDTO
   }
 }
 
-export class CommunitySubscribeDTO implements Readonly<CommunitySubscribeDTO> {
+abstract class BrowserClientInfo {
   @ApiProperty({ required: true })
   @IsNumber()
   id: number;
-
-  @ApiProperty({ required: true })
-  @IsString()
-  name: string;
-
-  @ApiProperty({ required: true })
-  @IsString()
-  email: string;
-
-  @ApiProperty({ required: true })
-  @IsString()
-  tariff: string;
 
   @ApiProperty({ required: false })
   @IsString()
@@ -69,28 +57,53 @@ export class CommunitySubscribeDTO implements Readonly<CommunitySubscribeDTO> {
   @IsString()
   userAgent: string;
 
+  protected static _from = (it, dto) => {
+    it.userIp = dto.userIp ? dto.userIp : '';
+    it.userDevice = dto.userDevice ? dto.userDevice : '';
+    it.userAgent = dto.userAgent ? dto.userAgent : '';
+    return it;
+  };
+
+  protected static _fromEntity = (entity) => {
+    return {
+      userIp: entity.userIp ? entity.userIp : '',
+      userDevice: entity.userDevice ? entity.userDevice : '',
+      userAgent: entity.userAgent ? entity.userAgent : '',
+    };
+  }
+}
+
+export class CommunitySubscribeDTO
+  extends BrowserClientInfo
+  implements Readonly<CommunitySubscribeDTO> {
+  @ApiProperty({ required: true })
+  @IsString()
+  name: string;
+
+  @ApiProperty({ required: true })
+  @IsString()
+  email: string;
+
+  @ApiProperty({ required: true })
+  @IsString()
+  tariff: string;
+
   public static from(dto: Partial<CommunitySubscribeDTO>) {
     const it = new CommunitySubscribeDTO();
     it.id = dto.id;
     it.name = dto.name;
     it.email = dto.email;
     it.tariff = dto.tariff;
-    it.userIp = dto.userIp;
-    it.userDevice = dto.userDevice;
-    it.userAgent = dto.userAgent;
-    return it;
+    return CommunitySubscribeDTO._from(it, dto);
   }
 
   public static fromEntity(entity: CommunitySubscribe) {
-    return this.from({
+    return this.from(Object.assign({}, {
       id: entity.id,
       name: entity.name,
       email: entity.email,
       tariff: entity.tariff,
-      userIp: entity.userIp,
-      userDevice: entity.userDevice,
-      userAgent: entity.userAgent,
-    });
+    }, CommunitySubscribeDTO._fromEntity(entity)));
   }
 
   public toEntity() {
@@ -99,10 +112,36 @@ export class CommunitySubscribeDTO implements Readonly<CommunitySubscribeDTO> {
     it.name = this.name;
     it.email = this.email;
     it.tariff = this.tariff;
-    it.userIp = this.userIp;
-    it.userDevice = this.userDevice;
-    it.userAgent = this.userAgent;
-    return it;
+    return CommunitySubscribeDTO._from(it, this);
+  }
+}
+
+export class CommunityReadinessDTO
+  extends BrowserClientInfo
+  implements Readonly<CommunityReadinessDTO> {
+  @ApiProperty({ required: true })
+  @IsString()
+  email: string;
+
+  public static from(dto: Partial<CommunityReadinessDTO>) {
+    const it = new CommunityReadinessDTO();
+    it.id = dto.id;
+    it.email = dto.email;
+    return CommunityReadinessDTO._from(it, dto);
+  }
+
+  public static fromEntity(entity: CommunityReadiness) {
+    return this.from(Object.assign({}, {
+      id: entity.id,
+      email: entity.email,
+    }, CommunityReadinessDTO._fromEntity(entity)));
+  }
+
+  public toEntity() {
+    const it = new CommunityReadiness();
+    it.id = this.id;
+    it.email = this.email;
+    return CommunityReadinessDTO._from(it, this);
   }
 }
 

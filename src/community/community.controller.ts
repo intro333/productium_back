@@ -1,6 +1,10 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { CommunityService } from './community.service';
-import { CommunityServiceInfoDTO, CommunitySubscribeDTO } from '../scripts/swagger/community.dto';
+import {
+  CommunityReadinessDTO,
+  CommunityServiceInfoDTO,
+  CommunitySubscribeDTO,
+} from '../scripts/swagger/community.dto';
 
 @Controller('api/community')
 export class CommunityController {
@@ -15,5 +19,11 @@ export class CommunityController {
   public async subscribe(@Body() data: CommunitySubscribeDTO): Promise<CommunitySubscribeDTO> {
     const dto = CommunitySubscribeDTO.from(data);
     return await this.serv.subscribe(dto);
+  }
+
+  @Post('readiness')
+  public async readiness(@Body() data: CommunityReadinessDTO): Promise<CommunityReadinessDTO> {
+    const dto = CommunityReadinessDTO.from(data);
+    return await this.serv.readiness(dto);
   }
 }
