@@ -1,7 +1,7 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
 import { configService } from '../../config/config.service';
 import { CommunityService } from '../../community/community.service';
-import { CommunityServiceInfo, CommunitySubscribe } from '../../model/community.entity';
+import { CommunityServiceInfo, CommunitySubscribe, CommunityReadiness } from '../../model/community.entity';
 import { CommunityServiceInfoDTO } from '../swagger/community.dto';
 
 async function run() {
@@ -14,6 +14,7 @@ async function run() {
   const communityService = new CommunityService(
     connection.getRepository(CommunityServiceInfo),
     connection.getRepository(CommunitySubscribe),
+    connection.getRepository(CommunityReadiness),
   );
   const dto = CommunityServiceInfoDTO.from({
     id: 1,
