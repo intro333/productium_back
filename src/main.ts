@@ -5,7 +5,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
+  app.enableCors({
+    origin: 'http://productium.org',
+    // credentials: true,
+  });
   if (!configService.isProduction()) {
     const document = SwaggerModule.createDocument(app, new DocumentBuilder()
       .setTitle('Item API')
