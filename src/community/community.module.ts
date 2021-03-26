@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommunityService } from './community.service';
+import { CmailerService } from '../mailer/cmailer.service';
 import { CommunityController } from './community.controller';
 import { CommunityReadiness, CommunityServiceInfo, CommunitySubscribe } from '../model/community.entity';
 
@@ -12,7 +13,7 @@ import { CommunityReadiness, CommunityServiceInfo, CommunitySubscribe } from '..
       CommunityReadiness,
     ]),
   ],
-  providers: [CommunityService],
+  providers: [CommunityService, CmailerService],
   controllers: [CommunityController],
   exports: [],
 })

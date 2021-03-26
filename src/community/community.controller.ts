@@ -5,10 +5,14 @@ import {
   CommunityServiceInfoDTO,
   CommunitySubscribeDTO,
 } from '../scripts/swagger/community.dto';
+import { CmailerService } from '../mailer/cmailer.service';
 
 @Controller('api/community')
 export class CommunityController {
-  constructor(private serv: CommunityService) { }
+  constructor(
+    private serv: CommunityService,
+    private mailerService: CmailerService,
+  ) { }
 
   @Post('init')
   public async getInitData(): Promise<CommunityServiceInfoDTO | null> {
@@ -18,6 +22,7 @@ export class CommunityController {
   @Post('subscribe')
   public async subscribe(@Body() data: CommunitySubscribeDTO): Promise<CommunitySubscribeDTO> {
     const dto = CommunitySubscribeDTO.from(data);
+    this.mailerService.send(data.name);
     return await this.serv.subscribe(dto);
   }
 

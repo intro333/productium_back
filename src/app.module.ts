@@ -16,7 +16,6 @@ import { MailerModule as CustomMailer } from './mailer/mailer.module';
       transport: {
         host: 'smtp.mailtrap.io',
         port: 2525,
-        secure: false, // upgrade later with STARTTLS
         auth: {
           user: '0298a410fa018c',
           pass: '7fc13a0685475c',
