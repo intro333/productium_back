@@ -23,7 +23,8 @@ import { MailerModule as CustomMailer } from './mailer/mailer.module';
       // },
       transport: {
         host: 'smtp.gmail.com',
-        port: 465,
+        port: 587,
+        secure: 'tls', // upgrade later with STARTTLS
         auth: {
           user: 'info@productium.org',
           pass: 'oRpnLnZn3*cE',
