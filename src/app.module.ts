@@ -22,12 +22,12 @@ import { MailerModule as CustomMailer } from './mailer/mailer.module';
       //   },
       // },
       transport: {
-        host: 'smtp.gmail.com',
+        host: 'email-smtp.eu-central-1.amazonaws.com',
         port: 587,
         secure: 'tls', // upgrade later with STARTTLS
         auth: {
-          user: 'info@productium.org',
-          pass: 'oRpnLnZn3*cE',
+          user: 'AKIA5HPT3BJ22G3SFT4L',
+          pass: 'BHjvClThUO4FHGfla0WYHuGC/QEeGFtZ8lAwxN5doKdP',
         },
       },
       defaults: {
