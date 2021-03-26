@@ -5,15 +5,15 @@ import { MailerService as MailerServiceFromLib } from '@nestjs-modules/mailer';
 export class CmailerService {
   constructor(private readonly mailerService: MailerServiceFromLib) {}
 
-  public send(name): void {
+  public send(name, email): void {
     console.log('SEND MAIL');
 
     this
       .mailerService
       .sendMail({
-        to: 'test@nestjs.com', // list of receivers
+        to: email, // list of receivers
         from: 'info@productium.org', // sender address
-        subject: 'Testing Nest MailerModule ✔', // Subject line
+        subject: 'Productium subscribe.', // Subject line
         // text: 'welcome', // plaintext body
         // html: '<b>welcome</b>', // HTML body content
         template: 'hello',

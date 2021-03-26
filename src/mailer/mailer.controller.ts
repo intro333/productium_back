@@ -7,6 +7,6 @@ export class MailerController {
 
   @Get('send-mail')
   public async sendMail() {
-    return this.serv.send('Dmitriy test');
+    return this.serv.send('Dmitriy test', 'intro333@ya.ru');
   }
 }

@@ -13,12 +13,20 @@ import { MailerModule as CustomMailer } from './mailer/mailer.module';
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
     CommunityModule,
     MailerModule.forRoot({
+      // transport: {
+      //   host: 'smtp.mailtrap.io',
+      //   port: 2525,
+      //   auth: {
+      //     user: '0298a410fa018c',
+      //     pass: '7fc13a0685475c',
+      //   },
+      // },
       transport: {
-        host: 'smtp.mailtrap.io',
-        port: 2525,
+        host: 'smtp.gmail.com',
+        port: 465,
         auth: {
-          user: '0298a410fa018c',
-          pass: '7fc13a0685475c',
+          user: 'info@productium.org',
+          pass: 'oRpnLnZn3*cE',
         },
       },
       defaults: {
