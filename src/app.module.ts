@@ -33,6 +33,7 @@ import { MailerModule as CustomMailer } from './mailer/mailer.module';
       transport: {
         host: 'smtp-relay.sendinblue.com',
         port: 587,
+        secure: 'ttl',
         auth: {
           user: 'admin@productium.org',
           pass: 'Syt31JwTH2rGhqEm',
