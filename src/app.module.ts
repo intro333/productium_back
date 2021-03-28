@@ -21,13 +21,22 @@ import { MailerModule as CustomMailer } from './mailer/mailer.module';
       //     pass: '7fc13a0685475c',
       //   },
       // },
+      // transport: {
+      //   host: 'email-smtp.eu-central-1.amazonaws.com',
+      //   port: 25,
+      //   // secure: 'tls',
+      //   auth: {
+      //     user: 'AKIA5HPT3BJ22G3SFT4L',
+      //     pass: 'BHjvClThUO4FHGfla0WYHuGC/QEeGFtZ8lAwxN5doKdP',
+      //   },
+      // },
       transport: {
-        host: 'email-smtp.eu-central-1.amazonaws.com',
-        port: 25,
-        // secure: 'tls',
+        host: 'smtp-relay.sendinblue.com',
+        port: 587,
+        // secure: false,
         auth: {
-          user: 'AKIA5HPT3BJ22G3SFT4L',
-          pass: 'BHjvClThUO4FHGfla0WYHuGC/QEeGFtZ8lAwxN5doKdP',
+          user: 'admin@productium.org',
+          pass: 'Syt31JwTH2rGhqEm',
         },
       },
       defaults: {
