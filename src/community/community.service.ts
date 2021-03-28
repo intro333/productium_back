@@ -47,6 +47,18 @@ export class CommunityService {
       });
   }
 
+  public async unsubscribe(
+    dto: CommunitySubscribeDTO,
+  ): Promise<{ status: string }> {
+    this.repoSubscribe.findOne({ email: dto.email }).then(row => {
+        this.repoSubscribe.remove(row);
+        return { status: 'ok' };
+      }).catch(err => {
+        return { status: 'err' };
+      });
+    return { status: 'ok' };
+  }
+
   public async readiness(
     dto: CommunityReadinessDTO,
   ): Promise<CommunityReadinessDTO> {

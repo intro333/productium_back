@@ -19,6 +19,7 @@ export class CmailerService {
         template: 'hello',
         context: {
           username: name,
+          email: email,
         },
       })
       .then(() => {})

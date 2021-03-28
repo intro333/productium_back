@@ -28,6 +28,12 @@ export class CommunityController {
     });
   }
 
+  @Post('unsubscribe')
+  public async unsubscribe(@Body() data: CommunitySubscribeDTO): Promise<{ status: string }> {
+    const dto = CommunitySubscribeDTO.from(data);
+    return await this.serv.unsubscribe(dto);
+  }
+
   @Post('readiness')
   public async readiness(@Body() data: CommunityReadinessDTO): Promise<CommunityReadinessDTO> {
     const dto = CommunityReadinessDTO.from(data);
