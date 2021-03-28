@@ -22,8 +22,10 @@ export class CommunityController {
   @Post('subscribe')
   public async subscribe(@Body() data: CommunitySubscribeDTO): Promise<CommunitySubscribeDTO> {
     const dto = CommunitySubscribeDTO.from(data);
-    this.mailerService.send(data.name, data.email);
-    return await this.serv.subscribe(dto);
+    return await this.serv.subscribe(dto).then((result) => {
+      this.mailerService.send(data.name, data.email);
+      return result;
+    });
   }
 
   @Post('readiness')
