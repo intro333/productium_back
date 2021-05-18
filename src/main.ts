@@ -6,7 +6,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'https://productium.org',
+    origin: 'http://localhost:8080',
     // credentials: true,
   });
   if (!configService.isProduction()) {

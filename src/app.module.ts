@@ -7,6 +7,8 @@ import { CommunityModule } from './community/community.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import { MailerModule as CustomMailer } from './mailer/mailer.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -50,6 +52,8 @@ import { MailerModule as CustomMailer } from './mailer/mailer.module';
       },
     }),
     CustomMailer,
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
