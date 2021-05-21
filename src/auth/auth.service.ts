@@ -24,6 +24,8 @@ export class AuthService {
     const salt = await bcrypt.genSalt();
     const password = await bcrypt.hash(user.password, salt);
     user.password = password;
+    user.salt = salt;
+    let result = {};
 
     /* Create user */
     await this.usersService
@@ -31,18 +33,17 @@ export class AuthService {
       .then((_user) => {
         const payload = {
           username: _user.fullName,
-          password,
-          id: user.id,
+          sub: user.id,
         };
-        return {
-          access_token: this.jwtService.sign(payload),
+        result = {
+          userId: user.id,
+          accessToken: this.jwtService.sign(payload),
         };
       })
       .catch(() => {
-        return {
-          error: 'user_not_create',
-        };
+        result = { error: 'user_not_create' };
       });
-    console.log('2222222');
+
+    return result;
   }
 }

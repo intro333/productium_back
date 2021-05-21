@@ -13,9 +13,7 @@ export class AppController {
 
   @Post('api/auth/login')
   async login(@Request() req) {
-    console.log(11111111111);
     const result = await this.authService.login(req.body);
-    console.log('result', result);
     return result;
   }
 

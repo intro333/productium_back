@@ -6,5 +6,6 @@ export class User implements IUser {
   @PrimaryGeneratedColumn('increment') id: number;
   @Column({ type: 'varchar', length: 100 }) fullName: string;
   @Column({ type: 'varchar', length: 200 }) password: string;
+  @Column({ type: 'varchar', length: 200 }) salt: string;
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' }) createdAt: Date;
 }
