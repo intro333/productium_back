@@ -88,12 +88,17 @@ export class CommunitySubscribeDTO
   @IsString()
   tariff: string;
 
+  @ApiProperty({ required: true })
+  @IsString()
+  lang: string;
+
   public static from(dto: Partial<CommunitySubscribeDTO>) {
     const it = new CommunitySubscribeDTO();
     it.id = dto.id;
     it.name = dto.name;
     it.email = dto.email;
     it.tariff = dto.tariff;
+    it.lang = dto.lang;
     return CommunitySubscribeDTO._from(it, dto);
   }
 

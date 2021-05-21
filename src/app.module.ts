@@ -36,7 +36,7 @@ import { UsersModule } from './users/users.module';
         host: 'smtp-relay.sendinblue.com',
         port: 587,
         auth: {
-          user: 'admin@productium.org',
+          user: 'intro8360@gmail.com',
           pass: 'Syt31JwTH2rGhqEm',
         },
       },
