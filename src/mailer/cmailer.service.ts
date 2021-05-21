@@ -7,7 +7,8 @@ export class CmailerService {
 
   public send(name, email, lang): void {
     console.log('SEND MAIL', lang);
-
+    const template = lang + '_hello';
+    console.log('SEND template', template);
     this
       .mailerService
       .sendMail({
@@ -16,7 +17,7 @@ export class CmailerService {
         subject: 'Welcome to Productium', // Subject line
         // text: 'welcome', // plaintext body
         // html: '<b>welcome</b>', // HTML body content
-        template: lang + '.hello',
+        template: template,
         context: {
           username: name,
           email: email,
