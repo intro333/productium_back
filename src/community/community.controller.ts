@@ -23,7 +23,7 @@ export class CommunityController {
   public async subscribe(@Body() data: CommunitySubscribeDTO): Promise<CommunitySubscribeDTO> {
     const dto = CommunitySubscribeDTO.from(data);
     return await this.serv.subscribe(dto).then((result) => {
-      this.mailerService.send(data.name, data.email);
+      this.mailerService.send(data.name, data.email, data.lang);
       return result;
     });
   }
