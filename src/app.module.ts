@@ -10,10 +10,15 @@ import { MailerModule as CustomMailer } from './mailer/mailer.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ProjectsAllModule } from './projects-all/projects-all.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+    }),
     CommunityModule,
     MailerModule.forRoot({
       // transport: {

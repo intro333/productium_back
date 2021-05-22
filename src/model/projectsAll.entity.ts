@@ -4,9 +4,9 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeor
 @Entity({ name: 'projects_all' })
 export class ProjectsAllEntity implements IProjectsAll {
   @PrimaryGeneratedColumn('increment') id: number;
-  @Column({ type: 'json' }) projects: { key: string };
-  @Column({ type: 'json' }) slides: { key: string };
-  @Column({ type: 'json' }) cases: { key: string };
+  @Column({ type: 'json' }) projects: any;
+  @Column({ type: 'json' }) slides: any;
+  @Column({ type: 'json' }) cases: any;
   @Column({ type: 'int' }) userId: number;
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' }) createdAt: Date;
 }

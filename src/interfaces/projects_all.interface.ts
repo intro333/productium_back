@@ -1,8 +1,8 @@
 export interface IProjectsAll {
   id?: number;
-  projects: { key: string };
-  slides: { key: string };
-  cases: { key: string };
+  projects: any;
+  slides: any;
+  cases: any;
   userId: number;
   createdAt?: Date;
 }
