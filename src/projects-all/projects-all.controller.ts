@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ProjectsAllService } from './projects-all.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { IProjectsAll } from '../interfaces/projects_all.interface';
+import { IProjectsAll, IProjectsInfo } from '../interfaces/projects_all.interface';
 import { FileInterceptor } from '@nestjs/platform-express';
 // import { diskStorage } from 'multer';
 // import { Helper } from '../shared/helper';
@@ -33,6 +33,26 @@ export class ProjectsAllController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Post('update-project-info')
+  public async updateProjectInfo(@Body() payload: IProjectsInfo) {
+    return await this.pAServ.updateProjectInfo(payload);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('add-slide')
+  public async setSlideData(
+    @Body() payload: { userId: number; slideData: any },
+  ) {
+    return await this.pAServ.setSlideData(payload);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('add-case')
+  public async setCaseData(@Body() payload: { userId: number; caseData: any }) {
+    return await this.pAServ.setCaseData(payload);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post('upload-slide-img')
   @UseInterceptors(FileInterceptor('file'))
   public async uploadSlideImg(
@@ -51,7 +71,6 @@ export class ProjectsAllController {
       'binary',
       function (err) {},
     );
-    await this.pAServ.setImage(userId, slideId, path + filename);
-    return {};
+    return await this.pAServ.setImage(userId, slideId, path + filename);
   }
 }

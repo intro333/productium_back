@@ -6,3 +6,12 @@ export interface IProjectsAll {
   userId: number;
   createdAt?: Date;
 }
+export interface IProjectData {
+  projects: any;
+  selectedProject: any;
+  activeColor: string;
+}
+export interface IProjectsInfo {
+  userId: number;
+  projectData: IProjectData;
+}
