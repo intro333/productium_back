@@ -1,38 +1,52 @@
-import { Injectable, UseGuards } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ProjectsAllEntity } from '../model/projectsAll.entity';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { IProjectsAll, IProjectsInfo } from '../interfaces/projects_all.interface';
+import { ProjectEntity } from '../model/projects.entity';
+import { IProject, ISimpleProjectsInfo } from '../interfaces/projects.interface';
 
 @Injectable()
 export class ProjectsAllService {
   constructor(
-    @InjectRepository(ProjectsAllEntity)
-    private readonly repo: Repository<ProjectsAllEntity>,
+    @InjectRepository(ProjectEntity)
+    private readonly repo: Repository<ProjectEntity>,
   ) {}
 
+  /* Все проекты пользователя */
   public async getInitData(payload: { userId: number }) {
-    return await this.repo
-      .findOne({ userId: payload.userId })
-      .then(async (item) => item);
+    return this.repo
+      .createQueryBuilder('projects')
+      .leftJoinAndSelect(
+        'projects.users',
+        'user',)
+      .where('user.id = :id', { id: payload.userId })
+      .getMany();
   }
 
-  public async setData(payload: IProjectsAll) {
+  public async setData(payload: IProject) {
     return await this.repo.save(payload);
   }
 
-  public async updateProjectInfo(payload: IProjectsInfo) {
-    const record = this.repo.findOne({ userId: payload.userId });
+  public async updateSimpleProjectInfo(payload: ISimpleProjectsInfo) {
+    const project = payload.project;
+    const record = this.repo.findOne(project.id);
     record.then((_r) => {
-      _r.projects = payload.projectData;
+      _r.name = project.name;
+      _r.activityStatus = project.activityStatus;
       return this.repo.save(_r);
     });
     return {};
   }
 
-  public async setSlideData(payload: { userId: number; slideData: any }) {
-    const record = this.repo.findOne({ userId: payload.userId });
+  public async addProject(payload: IProject) {
+    return await this.repo.save(payload);
+  }
+
+  public async setSlideData(payload: {
+    userId: number;
+    projectId: number;
+    slideData: any;
+  }) {
+    const record = this.repo.findOne(payload.projectId);
     record.then((_r) => {
       _r.slides = payload.slideData;
       return this.repo.save(_r);
@@ -40,8 +54,8 @@ export class ProjectsAllService {
     return {};
   }
 
-  public async setCaseData(payload: { userId: number; caseData: any }) {
-    const record = this.repo.findOne({ userId: payload.userId });
+  public async setCaseData(payload: { projectId: number; caseData: any }) {
+    const record = this.repo.findOne(payload.projectId);
     record.then((_r) => {
       _r.cases = payload.caseData;
       return this.repo.save(_r);
@@ -49,9 +63,9 @@ export class ProjectsAllService {
     return {};
   }
 
-  public async setImage(userId, slideId, imagePath) {
+  public async setImage(projectId, slideId, imagePath) {
     const result = await this.repo
-      .findOne({ userId: userId })
+      .findOne(projectId)
       .then(async (item) => item);
     const slides = result.slides.slides;
     const foundSlide = slides.find((_sl) => _sl.id === parseInt(slideId));
@@ -59,8 +73,6 @@ export class ProjectsAllService {
       foundSlide.img = true;
       foundSlide.imgUrl = imagePath;
     }
-    console.log('foundSlide', foundSlide);
-    console.log('slides', slides);
     result.slides.slides = slides;
     await this.repo.save(result);
     return foundSlide;

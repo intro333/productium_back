@@ -13,6 +13,10 @@ export class UsersService {
     return await this.repo.save(payload);
   }
 
+  async getUserById(userId: number): Promise<User | undefined> {
+    return await this.repo.findOne(userId);
+  }
+
   // async findOne(username: string): Promise<User | undefined> {
   //   return this.users.find((user) => user.username === username);
   // }

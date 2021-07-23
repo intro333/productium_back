@@ -2,13 +2,15 @@ import { Module } from '@nestjs/common';
 import { ProjectsAllController } from './projects-all.controller';
 import { ProjectsAllService } from './projects-all.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProjectsAllEntity } from '../model/projectsAll.entity';
+import { ProjectEntity } from '../model/projects.entity';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      ProjectsAllEntity
-    ])
+      ProjectEntity
+    ]),
+    UsersModule
   ],
   controllers: [ProjectsAllController],
   providers: [ProjectsAllService],
