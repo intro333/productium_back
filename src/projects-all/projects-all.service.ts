@@ -11,19 +11,47 @@ export class ProjectsAllService {
     private readonly repo: Repository<ProjectEntity>,
   ) {}
 
-  /* Все проекты пользователя */
-  public async getInitData(payload: { userId: number }) {
-    return this.repo
+  // public async getUsersByProjectId(projectId: number): Promise<IUser> {
+  //   return await this.repo.save(payload);
+  // }
+
+  public async setData(payload: IProject): Promise<ProjectEntity> {
+    return await this.repo.save(payload);
+  }
+
+  public async getProjectById(id: number): Promise<ProjectEntity> {
+    return await this.repo.findOne({
+      where: {
+        id,
+      },
+      relations: ['users'],
+    });
+  }
+
+  public async getProjectsByUserId(payload: {
+    userId: number;
+  }): Promise<ProjectEntity[]> {
+    return await this.repo
       .createQueryBuilder('projects')
-      .leftJoinAndSelect(
-        'projects.users',
-        'user',)
+      .leftJoinAndSelect('projects.users', 'user')
       .where('user.id = :id', { id: payload.userId })
       .getMany();
   }
 
-  public async setData(payload: IProject) {
-    return await this.repo.save(payload);
+  public async getProjectsByUserIds(
+    userIds: number[],
+  ): Promise<ProjectEntity[]> {
+    let query = await this.repo
+      .createQueryBuilder('projects')
+      .leftJoin('projects.users', 'user');
+    userIds.forEach((_id, i) => {
+      if (i === 0) {
+        query = query.where('user.id = :id', { id: _id });
+      } else {
+        query = query.orWhere('user.id = :id', { id: _id });
+      }
+    });
+    return query.getMany();
   }
 
   public async updateSimpleProjectInfo(payload: ISimpleProjectsInfo) {
@@ -37,7 +65,7 @@ export class ProjectsAllService {
     return {};
   }
 
-  public async addProject(payload: IProject) {
+  public async addProject(payload: IProject): Promise<ProjectEntity> {
     return await this.repo.save(payload);
   }
 
@@ -64,11 +92,14 @@ export class ProjectsAllService {
   }
 
   public async setImage(projectId, slideId, imagePath) {
+    console.log('imagePath', imagePath);
     const result = await this.repo
       .findOne(projectId)
       .then(async (item) => item);
     const slides = result.slides.slides;
-    const foundSlide = slides.find((_sl) => _sl.id === parseInt(slideId));
+    const foundSlide = slides.find((_sl) => _sl.id === slideId);
+    console.log('foundSlide', foundSlide);
+    console.log('imagePath', imagePath);
     if (foundSlide) {
       foundSlide.img = true;
       foundSlide.imgUrl = imagePath;

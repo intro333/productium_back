@@ -3,5 +3,6 @@ export interface IUser {
   fullName: string;
   password: string;
   salt: string;
+  projects: any[];
   createdAt: Date;
 }

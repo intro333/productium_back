@@ -4,6 +4,7 @@ export interface IProject {
   id?: number;
   name: string;
   activityStatus: string;
+  // creator: number;
   slides: any;
   cases: any;
   users: IUser[];

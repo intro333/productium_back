@@ -17,6 +17,27 @@ export class UsersService {
     return await this.repo.findOne(userId);
   }
 
+  async getUserByIds(userIds: number[]): Promise<User[]> {
+    return this.repo
+      .createQueryBuilder('users')
+      .whereInIds(userIds)
+      .getMany();
+  }
+
+  async getUsersByProjectIds(projectIds: number[]): Promise<User[]> {
+    let query = this.repo
+      .createQueryBuilder('users')
+      .leftJoin('users.projects', 'project');
+    projectIds.forEach((_id, i) => {
+      if (i === 0) {
+        query = query.where('project.id = :id', { id: _id });
+      } else {
+        query = query.orWhere('project.id = :id', { id: _id });
+      }
+    });
+    return query.getMany();
+  }
+
   // async findOne(username: string): Promise<User | undefined> {
   //   return this.users.find((user) => user.username === username);
   // }
