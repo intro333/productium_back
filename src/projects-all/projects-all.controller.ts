@@ -70,6 +70,8 @@ export class ProjectsAllController {
   public async setData(@Body() payload: IProject) {
     if (payload.userId) {
       const user = await this.servUser.getUserById(payload.userId);
+      delete user.password;
+      delete user.salt;
       payload.users = [user];
     }
     return await this.pAServ.setData(payload);
@@ -80,11 +82,13 @@ export class ProjectsAllController {
   public async shareProject(
     @Body() payload: { projectId: number; userId: number },
   ) {
+    console.log('SHARE PROJECT');
     if (payload.userId && payload.projectId) {
       const user = await this.servUser.getUserById(payload.userId);
       const project = await this.pAServ.getProjectById(payload.projectId);
       if (project && user) {
         project.users.push(user);
+        project.isShared = true;
         return await this.pAServ.setData(project);
       }
       return {};

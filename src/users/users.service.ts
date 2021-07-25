@@ -25,17 +25,25 @@ export class UsersService {
   }
 
   async getUsersByProjectIds(projectIds: number[]): Promise<User[]> {
-    let query = this.repo
-      .createQueryBuilder('users')
-      .leftJoin('users.projects', 'project');
-    projectIds.forEach((_id, i) => {
-      if (i === 0) {
-        query = query.where('project.id = :id', { id: _id });
-      } else {
-        query = query.orWhere('project.id = :id', { id: _id });
-      }
-    });
-    return query.getMany();
+    return await this.repo.query(`SELECT DISTINCT *
+FROM public.users u
+LEFT JOIN public.project_user projects_user ON projects_user.user_id=u.id
+WHERE projects_user.project_id IN (${projectIds.join()})`);
+    // console.log('query1', query1);
+    // query1.then((users) => {
+    //   return users;
+    // });
+    // let query = this.repo
+    //   .createQueryBuilder('users')
+    //   .leftJoinAndSelect('users.projects', 'project');
+    // projectIds.forEach((_id, i) => {
+    //   if (i === 0) {
+    //     query = query.where('project.id = :id', { id: _id });
+    //   } else {
+    //     query = query.orWhere('project.id = :id', { id: _id });
+    //   }
+    // });
+    // return query.getMany();
   }
 
   // async findOne(username: string): Promise<User | undefined> {
