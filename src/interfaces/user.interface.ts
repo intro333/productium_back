@@ -5,4 +5,5 @@ export interface IUser {
   salt: string;
   projects: any[];
   createdAt: Date;
+  project_id?: number;
 }

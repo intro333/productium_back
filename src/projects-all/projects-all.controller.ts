@@ -6,7 +6,7 @@ import {
   UseGuards,
   UploadedFile,
   UseInterceptors,
-  ClassSerializerInterceptor,
+  ClassSerializerInterceptor, Sse, Query, Header,
 } from '@nestjs/common';
 import { ProjectsAllService } from './projects-all.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -22,6 +22,9 @@ import { customFileName } from '../shared/helper';
 import { UsersService } from '../users/users.service';
 import { ProjectEntity } from '../model/projects.entity';
 import { User } from '../model/user.entity';
+import { interval, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { IUser } from '../interfaces/user.interface';
 
 @Controller('api/projects-all')
 export class ProjectsAllController {
@@ -36,7 +39,7 @@ export class ProjectsAllController {
   public async getInitData(@Body() payload: { userId: number }) {
     let projects: ProjectEntity[] = [];
     const projectIds: number[] = [];
-    const shareUsers: User[] = [];
+    const shareUsers = {};
     /* Projects of current user */
     await this.pAServ.getProjectsByUserId(payload).then((_items) => {
       _items.forEach((_item) => {
@@ -47,11 +50,19 @@ export class ProjectsAllController {
     });
     /* Users of selected projects */
     await this.servUser.getUsersByProjectIds(projectIds).then((_items) => {
-      _items.forEach((_item) => {
+      _items.forEach((_item: IUser) => {
         if (_item.id !== payload.userId) {
-          delete _item.password;
-          delete _item.salt;
-          shareUsers.push(_item);
+          if (shareUsers[_item.id]) { /* Юзер уже записан */
+            const projects = shareUsers[_item.id].projects;
+            projects.push(_item.project_id);
+            shareUsers[_item.id].projects = projects;
+          } else {
+            shareUsers[_item.id] = {
+              id: _item.id,
+              fullName: _item.fullName,
+              projects: [_item.project_id],
+            };
+          }
         }
       });
     });
@@ -66,6 +77,26 @@ export class ProjectsAllController {
 
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
+  @Post('update-all-data-per-time')
+  public async updateAllDataPerTime(@Body() payload: { userId: number }) {
+    let projects: ProjectEntity[] = [];
+    if (payload.userId) {
+      const user = await this.servUser.getUserById(payload.userId);
+      delete user.password;
+      delete user.salt;
+      await this.pAServ.getProjectsByUserId(payload).then((_items) => {
+        _items.forEach((_item) => {
+          delete _item.users;
+        });
+        projects = _items;
+      });
+      return projects;
+    }
+    return projects;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post('set-data')
   public async setData(@Body() payload: IProject) {
     if (payload.userId) {
@@ -76,6 +107,7 @@ export class ProjectsAllController {
     }
     return await this.pAServ.setData(payload);
   }
+
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('share-project')

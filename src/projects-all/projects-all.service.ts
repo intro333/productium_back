@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProjectEntity } from '../model/projects.entity';
-import { IProject, ISimpleProjectsInfo } from '../interfaces/projects.interface';
+import {
+  IProject,
+  ISimpleProjectsInfo,
+} from '../interfaces/projects.interface';
 
 @Injectable()
 export class ProjectsAllService {

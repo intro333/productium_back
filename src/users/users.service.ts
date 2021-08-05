@@ -25,7 +25,7 @@ export class UsersService {
   }
 
   async getUsersByProjectIds(projectIds: number[]): Promise<User[]> {
-    return await this.repo.query(`SELECT DISTINCT *
+    return await this.repo.query(`SELECT *
 FROM public.users u
 LEFT JOIN public.project_user projects_user ON projects_user.user_id=u.id
 WHERE projects_user.project_id IN (${projectIds.join()})`);
