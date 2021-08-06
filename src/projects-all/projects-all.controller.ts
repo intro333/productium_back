@@ -53,9 +53,9 @@ export class ProjectsAllController {
       _items.forEach((_item: IUser) => {
         if (_item.id !== payload.userId) {
           if (shareUsers[_item.id]) { /* Юзер уже записан */
-            const projects = shareUsers[_item.id].projects;
-            projects.push(_item.project_id);
-            shareUsers[_item.id].projects = projects;
+            const _projects = shareUsers[_item.id].projects;
+            _projects.push(_item.project_id);
+            shareUsers[_item.id].projects = _projects;
           } else {
             shareUsers[_item.id] = {
               id: _item.id,
@@ -115,13 +115,48 @@ export class ProjectsAllController {
     @Body() payload: { projectId: number; userId: number },
   ) {
     console.log('SHARE PROJECT');
+    let projectResult: ProjectEntity | null = null;
+    const shareUsers = {};
     if (payload.userId && payload.projectId) {
       const user = await this.servUser.getUserById(payload.userId);
       const project = await this.pAServ.getProjectById(payload.projectId);
       if (project && user) {
         project.users.push(user);
         project.isShared = true;
-        return await this.pAServ.setData(project);
+        project.cases.casesComments.forEach((_cc) => {
+          _cc.notifyInfo[user.id] = { status: 'read' };
+        });
+        await this.pAServ.setData(project).then((_project) => {
+          projectResult = _project;
+        });
+        if (projectResult) {
+          await this.servUser
+            .getUsersByProjectIds([projectResult.id])
+            .then((_items) => {
+              _items.forEach((_item: IUser) => {
+                if (_item.id !== payload.userId) {
+                  if (shareUsers[_item.id]) { /* Юзер уже записан */
+                    const _projects = shareUsers[_item.id].projects;
+                    _projects.push(_item.project_id);
+                    shareUsers[_item.id].projects = _projects;
+                  } else {
+                    shareUsers[_item.id] = {
+                      id: _item.id,
+                      fullName: _item.fullName,
+                      projects: [_item.project_id],
+                    };
+                  }
+                }
+              });
+            });
+        }
+        console.log('USER --------->', user.id);
+        console.log('projectResult', projectResult);
+        console.log('shareUsers', shareUsers);
+        return {
+          project: projectResult,
+          shareUsers,
+        };
       }
       return {};
     }
