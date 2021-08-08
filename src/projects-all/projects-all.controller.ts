@@ -114,7 +114,6 @@ export class ProjectsAllController {
   public async shareProject(
     @Body() payload: { projectId: number; userId: number },
   ) {
-    console.log('SHARE PROJECT');
     let projectResult: ProjectEntity | null = null;
     const shareUsers = {};
     if (payload.userId && payload.projectId) {
@@ -189,7 +188,7 @@ export class ProjectsAllController {
   @UseGuards(JwtAuthGuard)
   @Post('add-slide')
   public async setSlideData(
-    @Body() payload: { userId: number; projectId: number; slideData: any },
+    @Body() payload: { projectId: number; slideData: any },
   ) {
     return await this.pAServ.setSlideData(payload);
   }

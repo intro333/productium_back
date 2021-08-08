@@ -72,11 +72,7 @@ export class ProjectsAllService {
     return await this.repo.save(payload);
   }
 
-  public async setSlideData(payload: {
-    userId: number;
-    projectId: number;
-    slideData: any;
-  }) {
+  public async setSlideData(payload: { projectId: number; slideData: any }) {
     const record = this.repo.findOne(payload.projectId);
     record.then((_r) => {
       _r.slides = payload.slideData;
