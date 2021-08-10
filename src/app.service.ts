@@ -1,4 +1,7 @@
 import { Injectable } from '@nestjs/common';
+const EventEmitter = require('events');
+class MyEmitter extends EventEmitter {}
+const myEmitter = new MyEmitter();
 
 @Injectable()
 export class AppService {
@@ -6,6 +9,10 @@ export class AppService {
 
   getHello(): string {
     return 'Hello World!';
+  }
+
+  getEmitter() {
+    return myEmitter;
   }
 
   setIsUpdateProjectInfo(_state) {

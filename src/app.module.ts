@@ -12,6 +12,7 @@ import { UsersModule } from './users/users.module';
 import { ProjectsAllModule } from './projects-all/projects-all.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+// import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [
@@ -63,6 +64,9 @@ import { join } from 'path';
     ProjectsAllModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // AppGateway
+  ],
 })
 export class AppModule {}

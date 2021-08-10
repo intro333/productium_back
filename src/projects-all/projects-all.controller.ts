@@ -6,7 +6,7 @@ import {
   UseGuards,
   UploadedFile,
   UseInterceptors,
-  ClassSerializerInterceptor, Sse, Query, Header,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { ProjectsAllService } from './projects-all.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -25,10 +25,12 @@ import { User } from '../model/user.entity';
 import { interval, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IUser } from '../interfaces/user.interface';
+import { AppService } from '../app.service';
 
 @Controller('api/projects-all')
 export class ProjectsAllController {
   constructor(
+    private readonly appService: AppService,
     private pAServ: ProjectsAllService,
     private servUser: UsersService,
   ) {}
@@ -190,7 +192,10 @@ export class ProjectsAllController {
   public async setSlideData(
     @Body() payload: { projectId: number; slideData: any },
   ) {
-    return await this.pAServ.setSlideData(payload);
+    return await this.pAServ.setSlideData(payload).then(() => {
+      const emitter = this.appService.getEmitter();
+      emitter.emit('event');
+    });
   }
 
   @UseGuards(JwtAuthGuard)
@@ -198,7 +203,10 @@ export class ProjectsAllController {
   public async setCaseData(
     @Body() payload: { projectId: number; caseData: any },
   ) {
-    return await this.pAServ.setCaseData(payload);
+    return await this.pAServ.setCaseData(payload).then(() => {
+      const emitter = this.appService.getEmitter();
+      emitter.emit('event');
+    });
   }
 
   @UseGuards(JwtAuthGuard)
