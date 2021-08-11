@@ -83,11 +83,12 @@ export class ProjectsAllService {
 
   public async setCaseData(payload: { projectId: number; caseData: any }) {
     const record = this.repo.findOne(payload.projectId);
-    record.then((_r) => {
+    console.log(1111);
+    await record.then((_r) => {
       _r.cases = payload.caseData;
+      console.log(222222);
       return this.repo.save(_r);
     });
-    return {};
   }
 
   public async setImage(projectId, slideId, imagePath) {

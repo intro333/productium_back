@@ -204,6 +204,7 @@ export class ProjectsAllController {
     @Body() payload: { projectId: number; caseData: any },
   ) {
     return await this.pAServ.setCaseData(payload).then(() => {
+      console.log(3333333);
       const emitter = this.appService.getEmitter();
       emitter.emit('event');
     });

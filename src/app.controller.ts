@@ -61,7 +61,7 @@ export class AppController {
           setTimeout(() => {
             data = { projects: [] };
           }, 1000);
-          console.log('Event data: ' + _projects.length);
+          // console.log('Event data: ' + _projects.length);
         });
     });
     return interval(1000).pipe(map((_) => ({ data })));
